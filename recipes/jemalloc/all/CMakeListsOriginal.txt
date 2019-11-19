@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.4)
 # This make file supports Windows build of Jemalloc
 #
 # Prerequisites:
@@ -19,9 +20,7 @@
 # 4. And release mode (/m[:<N>] is also supported)
 #        msbuild jemalloc.sln /p:Configuration=Release
 #
-
 # Currently this file only enables building on Windows and not Cygwin or MSYS
-cmake_minimum_required (VERSION 3.4 FATAL_ERROR)
 
 # Set policy based on the CMake version
 cmake_policy(VERSION 3.4.3)
