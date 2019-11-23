@@ -1,4 +1,10 @@
 sources:
-  "5.2.1":
-    sha256: 34330e5ce276099e2e8950d9335db5a875689a4c6a56751ef3b1d8c537f887f6
-    url: https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
+  "4.3.1":
+    sha256: "f9be9a05fe906deb5c1c8ca818071a7d2e27d66fd87f5ba9a7bf3750bcedeaf0"
+    url: "https://github.com/jemalloc/jemalloc-cmake/archive/jemalloc-cmake.4.3.1.tar.gz"
+patches:
+  "4.3.1":
+    - base_path: "source_subfolder"
+      patch_file: "patches/4.3.1/fix-cmakelists.patch"
+    - base_path: "source_subfolder"
+      patch_file: "patches/4.3.1/fix-utilities.patch"

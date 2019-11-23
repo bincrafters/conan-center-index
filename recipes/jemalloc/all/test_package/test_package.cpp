@@ -9,6 +9,6 @@ int main() {
 	for (size_t i = 0; i < 1000; i++) {
 			do_something(i);
 	}
-	malloc_stats_print(NULL, NULL, NULL);
+	je_malloc_stats_print(NULL, NULL, NULL);
 	return 0;
 }

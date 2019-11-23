@@ -1,5 +1,5 @@
 import os
-from conans import ConanFile, CMake, AutoToolsBuildEnvironment, tools
+from conans import ConanFile, CMake, tools
 
 
 class JemallocConan(ConanFile):
@@ -10,11 +10,10 @@ class JemallocConan(ConanFile):
     license = "BSD-2-Clause"
     topics = ("malloc", "memory-allocator", "fragmentation")
     generators = "cmake"
-    exports_sources = ["CMakeLists.txt", "CMakeListsOriginal.txt", "Utilities.cmake"]
+    exports_sources = ["CMakeLists.txt", "patches/*"]
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    _autotools = None
 
     @property
     def _source_subfolder(self):
@@ -34,14 +33,15 @@ class JemallocConan(ConanFile):
 
     def source(self):
         tools.get(**self.conan_data["sources"][self.version])
-        extracted_dir = self.name + "-" + self.version
+        extracted_dir = "jemalloc-cmake-jemalloc-cmake." + self.version
         os.rename(extracted_dir, self._source_subfolder)
 
     def _configure_cmake(self):
         cmake = CMake(self)
         cmake.definitions["GIT_FOUND"] = False
         cmake.definitions["CMAKE_DISABLE_FIND_PACKAGE_Git"] = False
-        cmake.definitions["without-export"] = "${BUILD_STATIC_LIBRARY}"
+        cmake.definitions["without-export"] = not self.options.shared
+        cmake.definitions["enable-debug"] = self.settings.build_type == "Debug"
         cmake.configure(build_folder=self._build_subfolder)
         return cmake
 
@@ -55,26 +55,17 @@ class JemallocConan(ConanFile):
         return self._autotools
 
     def build(self):
-        if self.settings.os == "Windows":
-            os.rename("CMakeListsOriginal.txt", os.path.join(self._source_subfolder, "CMakeLists.txt"))
-            os.rename("Utilities.cmake", os.path.join(self._source_subfolder, "Utilities.cmake"))
-            cmake = self._configure_cmake()
-            cmake.build()
-        else:
-            autotools = self._configure_autotools()
-            autotools.make()
+        for patch in self.conan_data["patches"][self.version]:
+            tools.patch(**patch)
+        cmake = self._configure_cmake()
+        cmake.build()
 
     def package(self):
         self.copy(pattern="COPYING", src=self._source_subfolder, dst="licenses")
         if self.settings.os == "Windows":
-            cmake = self._configure_cmake()
-            cmake.install()
-        else:
-            autotools = self._configure_autotools()
-            autotools.install()
-        tools.rmdir(os.path.join(self.package_folder, "share"))
-        tools.rmdir(os.path.join(self.package_folder, "bin"))
-        tools.rmdir(os.path.join(self.package_folder, "lib", "pkgconfig"))
+            self.copy(pattern="*", src=os.path.join(self._source_subfolder, "include", "msvc_compat"), dst="include")
+        cmake = self._configure_cmake()
+        cmake.install()
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
