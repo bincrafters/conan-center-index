@@ -31,7 +31,6 @@ class CCTZConan(ConanFile):
         "OpenSSL/1.0.2r@conan/stable"
     )
 
-
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
