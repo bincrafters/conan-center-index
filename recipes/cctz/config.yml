@@ -1,3 +1,5 @@
 versions:
   "2.3":
     folder: all
+  "none-recipe-change":
+    folder: all
