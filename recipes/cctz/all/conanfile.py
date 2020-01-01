@@ -28,7 +28,7 @@ class CCTZConan(ConanFile):
     _build_subfolder = "build_subfolder"
 
     required = (
-        "OpenSSL/1.0.2r@conan/stable"
+        "openssl/1.0.2t"
     )
 
     def config_options(self):
