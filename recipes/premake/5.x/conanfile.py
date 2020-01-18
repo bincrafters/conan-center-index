@@ -21,19 +21,26 @@ class PremakeConan(ConanFile):
 
     @property
     def _platform(self):
-        return {'Windows': 'vs2017',
+        return {'Windows': 'gmake.windows',
                 'Linux': 'gmake.unix',
                 'Macos': 'gmake.macosx'}.get(str(self.settings.os_build))
 
     def build(self):
-        with tools.chdir(os.path.join(self._source_subfolder, 'build', self._platform)):
-            if self.settings.os_build == 'Windows':
-                msbuild = MSBuild(self)
-                msbuild.build("Premake5.sln", platforms={'x86': 'Win32', 'x86_64': 'x64'}, build_type="Release", arch=self.settings.arch_build)
-            elif self.settings.os_build == 'Linux':
-                env_build = AutoToolsBuildEnvironment(self)
-                env_build.make(args=['config=release'])
-            elif self.settings.os_build == 'Macos':
+        if self.settings.os_build == "Windows" and self.settings.compiler == "Visual Studio":
+            platform = "vs2017"
+        else:
+            platform = self._platform
+
+        with tools.chdir(os.path.join(self._source_subfolder, 'build', platform)):
+            if self.settings.os_build == "Windows": 
+                if self.settings.compiler == "Visual Studio":
+                    msbuild = MSBuild(self)
+                    msbuild.build("Premake5.sln", platforms={'x86': 'Win32', 'x86_64': 'x64'}, build_type="Release", arch=self.settings.arch_build)
+                else:
+                    env_build = AutoToolsBuildEnvironment(self)
+                    arch = "x86" if self.settings.arch_build == "x86" else "x64"
+                    env_build.make(args=['config=release_{}'.format(arch)])
+            else:
                 env_build = AutoToolsBuildEnvironment(self)
                 env_build.make(args=['config=release'])
 
