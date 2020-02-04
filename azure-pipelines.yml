@@ -51,4 +51,4 @@ stages:
     - bash: |
         set -e
         ${PYEXE} ./recipes/boost_base/all/src/script/build_all.py
-      displayeName: 'Build'
+      displayName: 'Build'
