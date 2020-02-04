@@ -36,8 +36,7 @@ class BuildAll(ForEach):
             required=True)
         parser.add_argument(
             '++package',
-            help='The single package to build.'
-        )
+            help='The single package to build.')
 
     def groups_pre(self, groups):
         # if not self.args.package:
@@ -65,32 +64,30 @@ class BuildAll(ForEach):
 
     def package_do(self, package):
         super(BuildAll, self).package_do(package)
-        if self.args.package:
-            if self.args.package == package:
-                package_name = 'boost_'+package
-                print('>>>>>>>>>>')
-                print('>>>>>>>>>> '+package_name)
-                print('>>>>>>>>>>')
-                sys.stdout.flush()
-                package_version = self.args.version
-                if package == 'base':
-                    package_version = self.args.base_version
-                package_dir = os.path.join(
-                    recipes_dir, package_name, package_version)
-                if not os.path.exists(package_dir):
-                    package_dir = os.path.join(
-                        recipes_dir, package_name, 'all')
-                if os.path.isdir(package_dir):
-                    with PushDir(package_dir) as _:
-                        builder = ConanMultiPackager(
-                            docker_entry_script='%s %s ++base-version=%s ++package=%s'%(
-                                os.environ['PYEXE'],
-                                os.path.realpath(__file__),
-                                self.args.base_version,
-                                package)
-                            )
-                        builder.add_common_builds()
-                        builder.run()
+        package_name = 'boost_'+package
+        print('>>>>>>>>>>')
+        print('>>>>>>>>>> '+package_name)
+        print('>>>>>>>>>>')
+        sys.stdout.flush()
+        package_version = self.args.version
+        if package == 'base':
+            package_version = self.args.base_version
+        package_dir = os.path.join(
+            recipes_dir, package_name, package_version)
+        if not os.path.exists(package_dir):
+            package_dir = os.path.join(
+                recipes_dir, package_name, 'all')
+        if os.path.isdir(package_dir):
+            with PushDir(package_dir) as _:
+                builder = ConanMultiPackager(
+                    docker_entry_script='%s %s ++base-version=%s ++package=%s'%(
+                        os.environ['PYEXE'],
+                        os.path.realpath(__file__),
+                        self.args.base_version,
+                        package)
+                    )
+                builder.add_common_builds()
+                builder.run()
 
 
 if __name__ == "__main__":
