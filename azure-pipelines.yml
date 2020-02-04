@@ -9,6 +9,8 @@ variables:
   CONAN_USERNAME: bincrafters
   CONAN_CHANNEL: testing
   CONAN_UPLOAD_DEPENDENCIES: all
+  CONAN_BUILD_POLICY: missing
+  CONAN_REMOTES: https://api.bintray.com/conan/bincrafters/public-conan@bincrafters
   BOOST_VERSION: 1.71.0
   BOOST_BASE_VERSION: 2.1.0
 
