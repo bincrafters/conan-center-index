@@ -79,15 +79,16 @@ class BuildAll(ForEach):
                 recipes_dir, package_name, 'all')
         if os.path.isdir(package_dir):
             with PushDir(package_dir) as _:
-                builder = ConanMultiPackager(
-                    docker_entry_script='%s %s ++base-version=%s ++package=%s'%(
-                        os.environ['PYEXE'],
-                        os.path.realpath(__file__),
-                        self.args.base_version,
-                        package)
-                    )
-                builder.add_common_builds()
-                builder.run()
+                with tools.environment_append(self.conan_env):
+                    builder = ConanMultiPackager(
+                        docker_entry_script='%s %s ++base-version=%s ++package=%s'%(
+                            os.environ['PYEXE'],
+                            os.path.realpath(__file__),
+                            self.args.base_version,
+                            package)
+                        )
+                    builder.add_common_builds()
+                    builder.run()
 
 
 if __name__ == "__main__":
