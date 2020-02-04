@@ -9,6 +9,8 @@ variables:
   CONAN_USERNAME: bincrafters
   CONAN_CHANNEL: testing
   CONAN_UPLOAD_DEPENDENCIES: all
+  BOOST_VERSION: 1.71.0
+  BOOST_BASE_VERSION: 2.1.0
 
 stages:
 - stage: Build
@@ -50,5 +52,5 @@ stages:
       displayName: 'Install: PIP'
     - bash: |
         set -e
-        ${PYEXE} ./recipes/boost_base/all/src/script/build_all.py
+        ${PYEXE} ./recipes/boost_base/all/src/script/build_all.py ++version=${BOOST_VERSION} ++base-version=${BOOST_BASE_VERSION}
       displayName: 'Build'
