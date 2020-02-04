@@ -40,14 +40,14 @@ class BuildAll(ForEach):
         )
 
     def groups_pre(self, groups):
-        if not self.args.package:
-            self.__check_call__([
-                'conan', 'remove', '-f', 'boost_*'
-            ])
-        self.__call__([
-            "conan", "remote", "add", "bincrafters",
-            "https://api.bintray.com/conan/bincrafters/public-conan",
-        ])
+        # if not self.args.package:
+        #     self.__check_call__([
+        #         'conan', 'remove', '-f', 'boost_*'
+        #     ])
+        # self.__call__([
+        #     "conan", "remote", "add", "bincrafters",
+        #     "https://api.bintray.com/conan/bincrafters/public-conan",
+        # ])
         self.conan_env = {}
         if 'CONAN_DOCKER_IMAGE' in os.environ:
             self.conan_env['CONAN_USE_DOCKER'] = '1'
