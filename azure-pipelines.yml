@@ -58,7 +58,7 @@ stages:
     strategy:
       matrix:
         Xcode 11.2:
-          CONAN_APPLE_CLANG_VERSIONS: 11.2
+          CONAN_APPLE_CLANG_VERSIONS: 11.0
           CONAN_ARCHS: x86_64
           CONAN_BUILD_TYPES: Release
           CONAN_CPPSTDS: 11

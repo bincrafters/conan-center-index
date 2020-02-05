@@ -39,16 +39,22 @@ class BuildAll(ForEach):
             help='The single package to build.')
 
     def groups_pre(self, groups):
+        self.build_in_container = False
         self.conan_env = {}
+        self.pip_install = []
         if 'CONAN_DOCKER_IMAGE' in os.environ:
             self.conan_env['CONAN_USE_DOCKER'] = '1'
         if tools.os_info.is_linux:
+            self.build_in_container = True
             conan_data_dir = os.path.join(root_dir, ".conan_data")
             tools.rmdir(conan_data_dir)
             tools.mkdir(conan_data_dir)
             self.__check_call__(['chmod', 'a+w', conan_data_dir])
             self.conan_env["CONAN_DOCKER_RUN_OPTIONS"] \
                 = "-v {}:/home/conan/.conan/data".format(conan_data_dir)
+        if self.build_in_container:
+            self.pip_install.append(
+                'https://github.com/grafikrobot/boost_lib_stats/archive/master.zip')
         super(BuildAll, self).groups_pre(groups)
 
     def package_do(self, package):
@@ -72,9 +78,7 @@ class BuildAll(ForEach):
                 env['CONAN_REFERENCE'] = "%s/%s"%(package_name, package_version)
                 with tools.environment_append(env):
                     builder = ConanMultiPackager(
-                        pip_install=[
-                            'https://github.com/grafikrobot/boost_lib_stats/archive/master.zip'
-                        ],
+                        pip_install=self.pip_install,
                         # docker_entry_script='%s %s ++base-version=%s ++package=%s'%(
                         #     os.environ['PYEXE'],
                         #     os.path.realpath(__file__),
