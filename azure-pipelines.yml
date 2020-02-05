@@ -38,8 +38,8 @@ stages:
         uname -a
         sudo apt-add-repository -y "ppa:deadsnakes/ppa"
         sudo apt-get update
-        sudo apt-get install python$3.7
-        sudo apt-get install python$3.7-dev
+        sudo apt-get install python3.7
+        sudo apt-get install python3.7-dev
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
         sudo python3 get-pip.py
       displayName: 'Install: Python'
