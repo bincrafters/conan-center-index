@@ -4,8 +4,6 @@ trigger:
       - boost
 
 variables:
-  PYVER: 3.7
-  PYEXE: /usr/bin/python3.7m
   CONAN_USERNAME: bincrafters
   CONAN_CHANNEL: testing
   CONAN_UPLOAD_DEPENDENCIES: all
@@ -40,19 +38,54 @@ stages:
         uname -a
         sudo apt-add-repository -y "ppa:deadsnakes/ppa"
         sudo apt-get update
-        sudo apt-get install python${PYVER}
-        sudo apt-get install python${PYVER}-dev
+        sudo apt-get install python$3.7
+        sudo apt-get install python$3.7-dev
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        sudo ${PYEXE} get-pip.py
+        sudo python3 get-pip.py
       displayName: 'Install: Python'
     - bash: |
         set -e
-        sudo pip${PYVER} install --upgrade pip
+        sudo pip$3.7 install --upgrade pip
         pip install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
         pip install --upgrade conan_package_tools
         pip install --upgrade conan
       displayName: 'Install: PIP'
     - bash: |
         set -e
-        ${PYEXE} ./recipes/boost_base/all/src/script/build_all.py ++version=${BOOST_VERSION} ++base-version=${BOOST_BASE_VERSION}
+        python3 ./recipes/boost_base/all/src/script/build_all.py ++version=${BOOST_VERSION} ++base-version=${BOOST_BASE_VERSION}
+      displayName: 'Build'
+  - job: 'macOS'
+    strategy:
+      matrix:
+        Xcode 11.2:
+          CONAN_APPLE_CLANG_VERSIONS: 11.2
+          CONAN_ARCHS: x86_64
+          CONAN_BUILD_TYPES: Release
+          CONAN_CPPSTDS: 11
+          XCODE_APP: /Applications/Xcode_11.2.app
+          VM_IMAGE: 'macOS-10.14'
+    pool:
+      vmImage: $(VM_IMAGE)
+    steps:
+    - bash: |
+        set -e
+        uname -a
+        sudo xcode-select -switch ${XCODE_APP}
+        which clang++
+      displayName: Install
+    - bash: |
+        set -e
+        brew update
+        brew reinstall python3
+      displayName: 'Install: Python'
+    - bash: |
+        set -e
+        pip3 install --upgrade pip
+        pip3 install --upgrade conan
+        pip3 install --upgrade conan_package_tools
+        pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
+      displayName: 'Install: PIP'
+    - bash: |
+        set -e
+        python3 ./recipes/boost_base/all/src/script/build_all.py ++version=${BOOST_VERSION} ++base-version=${BOOST_BASE_VERSION}
       displayName: 'Build'
