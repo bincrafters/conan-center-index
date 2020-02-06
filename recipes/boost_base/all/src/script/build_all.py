@@ -13,12 +13,13 @@ from foreach import ForEach
 from cpt.packager import ConanMultiPackager
 from conans import tools
 from pathlib import Path
+from conans.client.conan_api import Conan
+
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 recipes_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.dirname(script_dir))))
 root_dir = os.path.dirname(recipes_dir)
-conan_dir = os.path.join(str(Path.home()), '.conan')
 
 
 class BuildAll(ForEach):
@@ -47,6 +48,8 @@ class BuildAll(ForEach):
             self.conan_env['CONAN_USE_DOCKER'] = '1'
         if tools.os_info.is_linux:
             self.build_in_container = True
+            conan_api = conan_api, _, _ = Conan.factory()
+            conan_api.create_app()
             tools.rmdir(conan_dir)
             tools.mkdir(conan_dir)
             self.__check_call__(['chmod', 'a+w', conan_dir])
