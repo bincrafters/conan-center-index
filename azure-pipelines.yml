@@ -96,7 +96,6 @@ stages:
           CONAN_VISUAL_VERSIONS: 16
           CONAN_ARCHS: x86_64
           CONAN_BUILD_TYPES: Release
-          CONAN_CPPSTDS: 11
           VM_IMAGE: 'windows-2019'
     pool:
       vmImage: $(VM_IMAGE)
