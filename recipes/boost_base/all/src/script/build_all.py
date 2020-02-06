@@ -12,12 +12,14 @@ from bls.util import PushDir
 from foreach import ForEach
 from cpt.packager import ConanMultiPackager
 from conans import tools
+from conans.client import conan_api
 
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 recipes_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.dirname(script_dir))))
 root_dir = os.path.dirname(recipes_dir)
+conan_data_dir = conan_api.config_get("storage.path") 
 
 
 class BuildAll(ForEach):
@@ -46,7 +48,6 @@ class BuildAll(ForEach):
             self.conan_env['CONAN_USE_DOCKER'] = '1'
         if tools.os_info.is_linux:
             self.build_in_container = True
-            conan_data_dir = os.path.join(root_dir, ".conan_data")
             tools.rmdir(conan_data_dir)
             tools.mkdir(conan_data_dir)
             self.__check_call__(['chmod', 'a+w', conan_data_dir])
