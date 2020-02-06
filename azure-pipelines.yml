@@ -47,7 +47,7 @@ stages:
         set -e
         pip3 install --upgrade pip
         pip3 install --upgrade conan
-        pip3 install --upgrade https://github.com/conan-io/conan-package-tools/archive/develop.zip
+        pip3 install --upgrade conan_package_tools
         pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'Install: PIP'
     - bash: |
@@ -82,7 +82,7 @@ stages:
         set -e
         pip3 install --upgrade pip
         pip3 install --upgrade conan
-        pip3 install --upgrade https://github.com/conan-io/conan-package-tools/archive/develop.zip
+        pip3 install --upgrade conan_package_tools
         pip3 install --upgrade https://github.com/grafikrobot/boost_lib_stats/archive/master.zip
       displayName: 'Install: PIP'
     - bash: |
@@ -96,6 +96,7 @@ stages:
           CONAN_VISUAL_VERSIONS: 16
           CONAN_ARCHS: x86_64
           CONAN_BUILD_TYPES: Release
+          CONAN_VISUAL_RUNTIMES: MT
           VM_IMAGE: 'windows-2019'
     pool:
       vmImage: $(VM_IMAGE)
@@ -110,7 +111,7 @@ stages:
     - powershell: |
         python -m pip install --upgrade pip
         pip install --upgrade conan
-        pip install --upgrade "https://github.com/conan-io/conan-package-tools/archive/develop.zip"
+        pip install --upgrade "conan_package_tools
         pip install --upgrade "https://github.com/grafikrobot/boost_lib_stats/archive/master.zip"
       displayName: 'Install: PIP'
     - powershell: |
