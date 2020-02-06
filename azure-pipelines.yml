@@ -89,3 +89,30 @@ stages:
         set -e
         python3 ./recipes/boost_base/all/src/script/build_all.py ++version=${BOOST_VERSION} ++base-version=${BOOST_BASE_VERSION}
       displayName: 'Build'
+  - job: 'Windows'
+    strategy:
+      matrix:
+        VS 2019:
+          CONAN_VISUAL_VERSIONS: 16
+          CONAN_ARCHS: x86_64
+          CONAN_BUILD_TYPES: Release
+          CONAN_CPPSTDS: 11
+          VM_IMAGE: 'windows-2019'
+    pool:
+      vmImage: $(VM_IMAGE)
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x' 
+        addToPath: true 
+        architecture: 'x64'
+      name: Python3
+      displayName: 'Install: Python'
+    - powershell: |
+        pip install --upgrade pip
+        pip install --upgrade conan
+        pip install --upgrade "https://github.com/conan-io/conan-package-tools/archive/develop.zip"
+        pip install --upgrade "https://github.com/grafikrobot/boost_lib_stats/archive/master.zip"
+      displayName: 'Install: PIP'
+    - powershell: |
+        python ./recipes/boost_base/all/src/script/build_all.py ++version=$env:BOOST_VERSION ++base-version=$env:BOOST_BASE_VERSION
+      displayName: 'Build'
