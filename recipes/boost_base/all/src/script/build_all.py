@@ -18,7 +18,7 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 recipes_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.dirname(script_dir))))
 root_dir = os.path.dirname(recipes_dir)
-conan_data_dir = os.path.join(str(Path.home()), '.conan', 'data')
+conan_dir = os.path.join(str(Path.home()), '.conan')
 
 
 class BuildAll(ForEach):
@@ -47,11 +47,11 @@ class BuildAll(ForEach):
             self.conan_env['CONAN_USE_DOCKER'] = '1'
         if tools.os_info.is_linux:
             self.build_in_container = True
-            tools.rmdir(conan_data_dir)
-            tools.mkdir(conan_data_dir)
-            self.__check_call__(['chmod', 'a+w', conan_data_dir])
+            tools.rmdir(conan_dir)
+            tools.mkdir(conan_dir)
+            self.__check_call__(['chmod', 'a+w', conan_dir])
             self.conan_env["CONAN_DOCKER_RUN_OPTIONS"] \
-                = "-v {}:/home/conan/.conan/data".format(conan_data_dir)
+                = "-v {}:/home/conan/.conan".format(conan_dir)
         if self.build_in_container:
             self.pip_install.append(
                 'https://github.com/grafikrobot/boost_lib_stats/archive/master.zip')
