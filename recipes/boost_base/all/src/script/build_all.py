@@ -12,14 +12,13 @@ from bls.util import PushDir
 from foreach import ForEach
 from cpt.packager import ConanMultiPackager
 from conans import tools
-from conans.client import conan_api
-
+from pathlib import Path
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 recipes_dir = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.dirname(script_dir))))
 root_dir = os.path.dirname(recipes_dir)
-conan_data_dir = conan_api.config_get("storage.path") 
+conan_data_dir = os.path.join(str(Path.home()), '.conan', 'data')
 
 
 class BuildAll(ForEach):
