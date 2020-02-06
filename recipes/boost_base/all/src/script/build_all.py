@@ -50,11 +50,12 @@ class BuildAll(ForEach):
             self.build_in_container = True
             conan_api = conan_api, _, _ = Conan.factory()
             conan_api.create_app()
-            tools.rmdir(conan_dir)
-            tools.mkdir(conan_dir)
-            self.__check_call__(['chmod', 'a+w', conan_dir])
+            conan_data_dir = conan_api.config_get("storage.path")
+            tools.rmdir(conan_data_dir)
+            tools.mkdir(conan_data_dir)
+            self.__check_call__(['chmod', 'a+w', conan_data_dir])
             self.conan_env["CONAN_DOCKER_RUN_OPTIONS"] \
-                = "-v {}:/home/conan/.conan".format(conan_dir)
+                = "-v {}:/home/conan/.conan/data".format(conan_data_dir)
         if self.build_in_container:
             self.pip_install.append(
                 'https://github.com/grafikrobot/boost_lib_stats/archive/master.zip')
