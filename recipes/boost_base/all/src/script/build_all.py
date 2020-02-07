@@ -81,7 +81,7 @@ class BuildAll(ForEach):
                 env['CONAN_REFERENCE'] = "%s/%s"%(package_name, package_version)
                 with tools.environment_append(env):
                     if self.build_in_container:
-                        self.__check_call__(['chmod', 'a+w', self.conan_data_dir])
+                        self.__check_call__(['chmod', '-R', 'a+w', self.conan_data_dir])
                     builder = ConanMultiPackager(
                         pip_install=self.pip_install,
                         # docker_entry_script='%s %s ++base-version=%s ++package=%s'%(
