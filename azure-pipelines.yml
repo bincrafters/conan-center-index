@@ -4,6 +4,8 @@ trigger:
       - boost
 
 variables:
+  CONAN_BUILD_TYPES: Release
+  CONAN_ARCHS: x86_64
   CONAN_USERNAME: bincrafters
   CONAN_CHANNEL: testing
   CONAN_UPLOAD_DEPENDENCIES: all
@@ -20,12 +22,12 @@ stages:
       vmImage: 'ubuntu-16.04'
     strategy:
       matrix:
-        GCC 9:
+        Clang 9:
           CONAN_DOCKER_IMAGE: conanio/clang9
           CONAN_CLANG_VERSIONS: 9
-          CONAN_ARCHS: x86_64
-          CONAN_BUILD_TYPES: Release
-          CONAN_CPPSTDS: 11
+        GCC 9:
+          CONAN_DOCKER_IMAGE: conanio/gcc9
+          CONAN_CLANG_VERSIONS: 9
     steps:
     - bash: |
         set -e
@@ -59,9 +61,6 @@ stages:
       matrix:
         Xcode 11.2:
           CONAN_APPLE_CLANG_VERSIONS: 11.0
-          CONAN_ARCHS: x86_64
-          CONAN_BUILD_TYPES: Release
-          CONAN_CPPSTDS: 11
           XCODE_APP: /Applications/Xcode_11.2.app
           VM_IMAGE: 'macOS-10.14'
     pool:
@@ -94,8 +93,6 @@ stages:
       matrix:
         VS 2019:
           CONAN_VISUAL_VERSIONS: 16
-          CONAN_ARCHS: x86_64
-          CONAN_BUILD_TYPES: Release
           CONAN_VISUAL_RUNTIMES: MT
           VM_IMAGE: 'windows-2019'
     pool:
