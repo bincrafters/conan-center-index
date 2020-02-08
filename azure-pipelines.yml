@@ -23,11 +23,11 @@ stages:
     strategy:
       matrix:
         Clang 9:
+          CONAN_CLANG_VERSIONS: 9
           CONAN_DOCKER_IMAGE: conanio/clang9
-          CONAN_CLANG_VERSIONS: 9
         GCC 9:
+          CONAN_GCC_VERSIONS: 9
           CONAN_DOCKER_IMAGE: conanio/gcc9
-          CONAN_CLANG_VERSIONS: 9
     steps:
     - bash: |
         set -e
