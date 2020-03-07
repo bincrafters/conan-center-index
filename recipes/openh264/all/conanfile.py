@@ -19,9 +19,9 @@ class OpenH264Conan(ConanFile):
     exports_sources = ["platform-android.mk.patch"]
 
     def build_requirements(self):
-        self.build_requires("nasm/2.13.02")
+        self.build_requires("nasm/2.14")
         if tools.os_info.is_windows:
-            if "CONAN_BASH_PATH" not in os.environ:
+            if "CONAN_BASH_PATH" not in os.environ and tools.os_info.detect_windows_subsystem() != 'msys2':
                 self.build_requires("msys2/20190524")
 
     def source(self):
@@ -37,7 +37,7 @@ class OpenH264Conan(ConanFile):
         return tools.unix_path(path) if self._use_winbash else path
 
     def build(self):
-        with tools.vcvars(self.settings):
+        with tools.vcvars(self.settings) if self.settings.compiler == "Visual Studio" else tools.no_op():
             tools.patch(os.path.join(self._source_subfolder, "build"), "platform-android.mk.patch")
             with tools.chdir(self._source_subfolder):
                 prefix = os.path.abspath(self.package_folder)
@@ -116,3 +116,10 @@ class OpenH264Conan(ConanFile):
             self.cpp_info.system_libs.extend(['m', 'pthread'])
         if self.settings.os == "Android":
             self.cpp_info.system_libs.append("m")
+        libcxx = self.settings.get_safe("compiler.libcxx")
+        if libcxx in ["libstdc++", "libstdc++11"]:
+            self.cpp_info.system_libs.append("stdc++")
+        elif libcxx == "libc++":
+            self.cpp_info.system_libs.append("c++")
+        elif libcxx in ["c++_static", "c++_shared"]:
+            self.cpp_info.system_libs.extend([libcxx, "c++abi"])
