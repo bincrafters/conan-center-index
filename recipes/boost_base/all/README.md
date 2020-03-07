@@ -101,7 +101,7 @@ will run through the packages available in dependency order and call
 package database re-scanning and exports. To use invoke like this:
 
 ```
-./boost_base/all/script/create_all.py ++version=1.70.0 ++user=bincrafters ++channel=testing ++repo-dir=.
+./boost_base/all/src/script/create_all.py ++version=1.71.0 ++base-version=2.1.0 ++user=bincrafters ++channel=testing
 ```
 
 Which will locally build and test the packages with the default settings and
@@ -109,5 +109,5 @@ options. You can check with other settings and options by adding options
 for them as regular `--` options. For example to test shared library building:
 
 ```
-./boost_base/all/script/create_all.py ++version=1.70.0 ++user=bincrafters ++channel=testing ++repo-dir=. "--options=*:shared=True"
+./boost_base/all/src/script/create_all.py ++version=1.71.0 ++base-version=2.1.0 ++user=bincrafters ++channel=testing "--options=*:shared=True"
 ```
