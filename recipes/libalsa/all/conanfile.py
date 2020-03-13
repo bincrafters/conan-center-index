@@ -5,20 +5,23 @@ import os
 
 class LibalsaConan(ConanFile):
     name = "libalsa"
-    license = "LGPL-2.1"
+    license = "LGPL-2.1-or-later"
     url = "https://github.com/conan-io/conan-center-index"
     homepage = "https://github.com/alsa-project/alsa-lib"
     topics = ("conan", "libalsa", "alsa", "sound", "audio", "midi")
     description = "Library of ALSA: The Advanced Linux Sound Architecture, that provides audio " \
                   "and MIDI functionality to the Linux operating system"
     options = {"shared": [True, False], "fPIC": [True, False], "disable_python": [True, False]}
-    default_options = {'shared': False, 'fPIC': True, 'disable_python': True}
+    default_options = {"shared": False, "fPIC": True, "disable_python": True}
     settings = "os", "compiler", "build_type", "arch"
     _autotools = None
 
     @property
     def _source_subfolder(self):
         return "source_subfolder"
+
+    def build_requirements(self):
+        self.build_requires("libtool/2.4.6")
 
     def configure(self):
         if self.settings.os != "Linux":
@@ -68,4 +71,4 @@ class LibalsaConan(ConanFile):
     def package_info(self):
         self.cpp_info.libs = ["asound"]
         self.cpp_info.system_libs = ["dl", "m", "rt", "pthread"]
-        self.cpp_info.names['pkg_config'] = 'alsa'
+        self.cpp_info.names["pkg_config"] = "alsa"
