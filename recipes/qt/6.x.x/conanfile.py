@@ -467,7 +467,7 @@ class QtConan(ConanFile):
             tools.replace_in_file(f,
                 "$<$<STREQUAL:$<TARGET_PROPERTY:TYPE>,MODULE_LIBRARY>:-Wl,--export-dynamic>",
                 "", strict=False)
-        with tools.vcvars(self.settings) if self.settings.compiler == "Visual Studio" else tools.no_op():
+        with tools.vcvars(self.settings, winsdk_version="10.0.18362.0") if self.settings.compiler == "Visual Studio" else tools.no_op():
             build_env = {"MAKEFLAGS": "j%d" % tools.cpu_count(), "PKG_CONFIG_PATH": [self.build_folder]}
             if self.settings.os == "Windows":
                 build_env["PATH"] = [os.path.join(self.source_folder, "qt6", "gnuwin32", "bin")]
