@@ -22,10 +22,4 @@ if ("${CONAN_PACKAGE_VERSION}" VERSION_GREATER "1.10")
     add_definitions(-DXML_DTD)
 endif()
 
-# https://github.com/pocoproject/poco/issues/3347
-option(POCO_NO_FORK_EXEC "No fork")
-if(POCO_NO_FORK_EXEC)
-    add_definitions(-DPOCO_NO_FORK_EXEC=1)
-endif()
-
 add_subdirectory(source_subfolder)
