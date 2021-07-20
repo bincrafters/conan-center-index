@@ -201,8 +201,7 @@ class PocoConan(ConanFile):
             self._cmake.definitions["APRUTIL_ROOT_DIR"] = self.deps_cpp_info["apr-util"].rootpath
             self._cmake.definitions["APRUTIL_ROOT_INCLUDE_DIRS"] = ";".join(self.deps_cpp_info["apr-util"].include_paths)
             self._cmake.definitions["APRUTIL_ROOT_LIBRARY_DIRS"] = ";".join(self.deps_cpp_info["apr-util"].lib_paths)
-        if not self.options.get_safe("enable_fork", True):
-            self._cmake.definitions["CMAKE_CXX_FLAGS"] = True
+            self._cmake.definitions["POCO_NO_FORK_EXEC"] = not self.options.get_safe("enable_fork", True)
 
         self.output.info(self._cmake.definitions)
 
