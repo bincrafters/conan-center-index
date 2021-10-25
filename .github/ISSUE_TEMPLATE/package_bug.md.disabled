@@ -1,0 +1,26 @@
+---
+name: 'Package: Bug Report'
+about: 'Report a bug, something does not work as it supposed to'
+title: '[package] <LIBRARY-NAME>/<LIBRARY-VERSION>: SHORT DESCRIPTION'
+labels: bug
+---
+
+
+
+```
+
+```
+
+
+### Steps to reproduce (Include if Applicable)
+
+
+
+### Logs (Include/Attach if Applicable)
+<details><summary>Click to expand log</summary>
+
+```
+Put your log output here
+```
+
+</details>
