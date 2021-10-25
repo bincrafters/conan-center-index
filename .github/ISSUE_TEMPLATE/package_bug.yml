@@ -48,8 +48,7 @@ body:
       required: false
   - type: markdown
     attributes:
-      value: |
-          ### Package and Environment Details (include every applicable attribute
+      value: "### Package and Environment Details (include every applicable attribute)"
   - type: textarea
     id: what-happened
     attributes:
