@@ -14,49 +14,50 @@ body:
   - type: input
     id: os
     attributes:
-      label: Operating System + Version
+      label: "#### Operating System + Version"
       placeholder: Linux Ubuntu 16.04
     validations:
       required: false
   - type: input
     id: compiler
     attributes:
-      label: Compiler + Version
+      label: "#### Compiler + Version"
       placeholder: GCC 10
     validations:
       required: false
   - type: input
     id: docker
     attributes:
-      label: Docker Image (if used)
+      label: "#### Docker Image (if used)"
       placeholder: conanio/gcc10-ubuntu16.04
     validations:
       required: false
   - type: input
     id: conan
     attributes:
-      label: Conan Version
+      label: "#### Conan Version"
       placeholder: 1.41.0
     validations:
       required: false
   - type: input
     id: python
     attributes:
-      label: Python version
+      label: "#### Python version"
       placeholder: 3.10.0
     validations:
       required: false
-  - type: markdown
-    attributes:
-      value: "### Package and Environment Details (include every applicable attribute)"
   - type: textarea
-    id: what-happened
+    id: conan-profile
     attributes:
-      label: "### Conan profile"
-      description: output of `conan profile show default` or `conan profile show <profile>` if custom profile is in use
+      label: "### Conan profile (output of `conan profile show default` or `conan profile show <profile>` if custom profile is in use)"
       placeholder: Put your profile output here
     validations:
       required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: "### Steps to reproduce (Include if Applicable)"
+      placeholder: What did you do first, then second ...?
     validations:
       required: true
   - type: dropdown
@@ -72,6 +73,6 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      label: "### Logs (Include/Attach if Applicable)"
+      description: Please copy and paste your entire log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
