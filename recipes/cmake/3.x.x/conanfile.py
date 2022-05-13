@@ -24,9 +24,6 @@ class CMakeConan(ConanFile):
     _source_subfolder = "source_subfolder"
     _cmake = None
 
-    def _minor_version(self):
-        return ".".join(str(self.version).split(".")[:2])
-
     def config_options(self):
         if self.settings.os == "Windows":
             self.options.with_openssl = False
@@ -105,15 +102,13 @@ class CMakeConan(ConanFile):
         del self.info.settings.compiler
 
     def package_info(self):
-        minor = self._minor_version()
-
         bindir = os.path.join(self.package_folder, "bin")
         self.output.info("Appending PATH environment variable: {}".format(bindir))
         self.env_info.PATH.append(bindir)
 
         self.buildenv_info.prepend_path("CMAKE_ROOT", self.package_folder)
         self.env_info.CMAKE_ROOT = self.package_folder
-        mod_path = os.path.join(self.package_folder, "share", "cmake-%s" % minor, "Modules")
+        mod_path = os.path.join(self.package_folder, "share", "cmake-%s" % tools.Version(self.version).minor, "Modules")
         self.buildenv_info.prepend_path("CMAKE_MODULE_PATH", mod_path)
         self.env_info.CMAKE_MODULE_PATH = mod_path
         if not os.path.exists(mod_path):
