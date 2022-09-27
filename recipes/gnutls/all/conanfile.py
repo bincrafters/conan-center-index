@@ -1,8 +1,8 @@
 from conan import ConanFile
 from conan.errors import ConanInvalidConfiguration
-from conan.tools.env import VirtualBuildEnv, VirtualRunEnv, Environment
+from conan.tools.env import VirtualBuildEnv, VirtualRunEnv
 from conan.tools.build import check_min_cppstd, cross_building
-from conan.tools.files import copy, get, rm, rmdir, apply_conandata_patches, export_conandata_patches, replace_in_file
+from conan.tools.files import copy, get, rm, rmdir, replace_in_file
 from conan.tools.gnu import Autotools, AutotoolsToolchain, AutotoolsDeps, PkgConfigDeps
 from conan.tools.layout import basic_layout
 import os
@@ -27,9 +27,6 @@ class GnuTLSConan(ConanFile):
         "shared": False,
         "fPIC": True,
     }
-
-    #def export_sources(self):
-    #    export_conandata_patches(self)
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -56,7 +53,7 @@ class GnuTLSConan(ConanFile):
     def requirements(self):
         self.requires("gmp/6.2.1")
         self.requires("libidn2/2.3.0")
-        self.requires("nettle/3.6")
+        self.requires("nettle/3.8.1")
         self.requires("libtasn1/4.16.0")
         self.requires("libunistring/0.9.10")
 
@@ -79,6 +76,7 @@ class GnuTLSConan(ConanFile):
         yes_no = lambda v: "yes" if v else "no"
         tc = AutotoolsToolchain(self)
         tc.configure_args.append("--disable-tests")
+        tc.configure_args.append("--without-p11-kit")
         tc.generate()
         tc = PkgConfigDeps(self)
         tc.generate()
@@ -97,10 +95,7 @@ class GnuTLSConan(ConanFile):
         replace_in_file(self, os.path.join(self.source_folder, "configure"), '$PKG_CONFIG --cflags "hogweed', '$PKG_CONFIG --cflags "nettle-hogweed')
 
     def build(self):
-        self._patch_sources()
-        apply_conandata_patches(self)
         autotools = Autotools(self)
-        # autotools.autoreconf()
         autotools.configure()
         autotools.make()
 
@@ -117,8 +112,5 @@ class GnuTLSConan(ConanFile):
         self.cpp_info.libs = ["gnutls"]
         self.cpp_info.set_property("pkg_config_name", "gnutls")
 
-        # If they are needed on Linux, m, pthread and dl are usually needed on FreeBSD too
         if self.settings.os in ["Linux", "FreeBSD"]:
-            self.cpp_info.system_libs.append("m")
-            self.cpp_info.system_libs.append("pthread")
-            self.cpp_info.system_libs.append("dl")
+            self.cpp_info.system_libs = ["m", "pthread", "dl"]
