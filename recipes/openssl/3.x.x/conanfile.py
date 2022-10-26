@@ -1,7 +1,7 @@
 from conan import ConanFile
 from conan.errors import ConanInvalidConfiguration
 from conan.tools.build import cross_building
-from conan.tools.files import get, rename, rmdir
+from conan.tools.files import get, rename, rmdir, rm
 from conan.tools.microsoft import is_msvc, msvc_runtime_flag
 from conans import AutoToolsBuildEnvironment, tools
 import contextlib
@@ -10,7 +10,7 @@ import functools
 import os
 import textwrap
 
-required_conan_version = ">=1.47.0"
+required_conan_version = ">=1.50.0"
 
 
 class OpenSSLConan(ConanFile):
@@ -120,7 +120,7 @@ class OpenSSLConan(ConanFile):
 
     def requirements(self):
         if not self.options.no_zlib:
-            self.requires("zlib/1.2.12")
+            self.requires("zlib/1.2.13")
 
     def build_requirements(self):
         if self._settings_build.os == "Windows":
@@ -637,10 +637,7 @@ class OpenSSLConan(ConanFile):
         self.copy("*LICENSE*", src=self._source_subfolder, dst="licenses")
         with tools.vcvars(self) if self._use_nmake else tools.no_op():
             self._make_install()
-        for root, _, files in os.walk(self.package_folder):
-            for filename in files:
-                if fnmatch.fnmatch(filename, "*.pdb"):
-                    os.unlink(os.path.join(self.package_folder, root, filename))
+        rm(self, "*.pdb", self.package_folder, recursive=True)
         if self._use_nmake:
             if self.settings.build_type == "Debug":
                 with tools.chdir(os.path.join(self.package_folder, "lib")):

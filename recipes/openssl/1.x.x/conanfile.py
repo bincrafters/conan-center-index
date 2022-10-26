@@ -1,7 +1,7 @@
 from conan import ConanFile
 from conan.errors import ConanInvalidConfiguration
 from conan.tools.build import cross_building
-from conan.tools.files import rename, get, rmdir
+from conan.tools.files import rename, get, rmdir, rm
 from conan.tools.microsoft import is_msvc, msvc_runtime_flag
 from conans import AutoToolsBuildEnvironment, tools
 from contextlib import contextmanager
@@ -10,7 +10,7 @@ import fnmatch
 import os
 import textwrap
 
-required_conan_version = ">=1.47.0"
+required_conan_version = ">=1.50.0"
 
 
 @total_ordering
@@ -232,7 +232,7 @@ class OpenSSLConan(ConanFile):
 
     def requirements(self):
         if self._full_version < "1.1.0" and self.options.get_safe("no_zlib") == False:
-            self.requires("zlib/1.2.12")
+            self.requires("zlib/1.2.13")
 
     def validate(self):
         if self.settings.os == "Emscripten":
@@ -794,10 +794,7 @@ class OpenSSLConan(ConanFile):
         self.copy(src=self._source_subfolder, pattern="*LICENSE", dst="licenses")
         with tools.vcvars(self.settings) if self._use_nmake else tools.no_op():
             self._make_install()
-        for root, _, files in os.walk(self.package_folder):
-            for filename in files:
-                if fnmatch.fnmatch(filename, "*.pdb"):
-                    os.unlink(os.path.join(self.package_folder, root, filename))
+        rm(self, "*.pdb", self.package_folder, recursive=True)
         if self._use_nmake:
             if self.settings.build_type == 'Debug' and self._full_version >= "1.1.0":
                 with tools.chdir(os.path.join(self.package_folder, 'lib')):
